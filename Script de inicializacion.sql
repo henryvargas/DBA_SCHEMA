@@ -7,6 +7,7 @@
 *	--------------------------------------------------------
 *	Julio Daviu			03-02-2019			Creacion Esquema (Proyectos, Usuario) Tablas (Proyecto, Persona, Login )
 *   Miguel Claros       03-02-2019          Creacion Esquema (Incidentes), Tablas (Password, Incidente, Tipo_Accidente, Tipo_Lesion)
+*   Miguel Claros       05-02-2019          Creacion Esquema (Equipamientos), Tablas (Cargo, Organigrama, Empleado, Proyecto_Emplado,Incidente_Empleado,Ausentismo)
 *
 *
 *************************************************************/
@@ -15,8 +16,9 @@
 USE SGSO_RESCUE
 
 GO
-
---CREANDO ESQUEMA PROEYCTOS
+----------------------------------------------------------------------------------------------
+---------------------------------------CREACION DE ESQUEMA------------------------------------
+--CREANDO ESQUEMA PROYECTOS
 
 PRINT 'CREANDO ESQUEMA PROYECTOS';
 
@@ -33,8 +35,61 @@ ELSE
 	END
 
 GO
+--CREANDO ESQUEMA USUARIO
 
--- TABLA PROYECTO
+PRINT 'CREANDO ESQUEMA USUARIO';
+
+IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = 'Usuario')
+
+	BEGIN
+		EXEC('CREATE SCHEMA Usuario')
+
+		PRINT 'ESQUEMA Usuario CREADO';
+	END
+ELSE
+	BEGIN
+		PRINT 'ESQUEMA Usuario YA EXISTE';
+	END
+
+GO
+
+--CREANDO ESQUEMA EQUIPAMIENTOS
+
+PRINT 'CREANDO ESQUEMA EQUIPAMIENTOS';
+
+IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = 'Equipamientos')
+
+	BEGIN
+		EXEC('CREATE SCHEMA Equipamientos')
+
+		PRINT 'ESQUEMA EQUIPAMIENTOS CREADO';
+	END
+ELSE
+	BEGIN
+		PRINT 'ESQUEMA EQUIPAMIENTOS YA EXISTE';
+	END
+
+GO
+--CREANDO ESQUEMA INCIDENTES
+
+PRINT 'CREANDO ESQUEMA INCIDENTES';
+
+IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = 'Incidentes')
+
+	BEGIN
+		EXEC('CREATE SCHEMA Incidentes')
+
+		PRINT 'ESQUEMA INCIDENTES CREADO';
+	END
+ELSE
+	BEGIN
+		PRINT 'ESQUEMA INCIDENTES YA EXISTE';
+	END
+
+GO
+----------------------------------------------------------------------------------------------
+---------------------------------------CREACION DE TABLAS-------------------------------------
+-- CREANDO TABLA PROYECTO
 
 PRINT 'CREANDO TABLA PROYECTO';
 
@@ -60,23 +115,6 @@ ELSE
 
 GO
 
---CREANDO ESQUEMA USUARIO
-
-PRINT 'CREANDO ESQUEMA USUARIO';
-
-IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = 'Usuario')
-
-	BEGIN
-		EXEC('CREATE SCHEMA Usuario')
-
-		PRINT 'ESQUEMA Usuario CREADO';
-	END
-ELSE
-	BEGIN
-		PRINT 'ESQUEMA Usuario YA EXISTE';
-	END
-
-GO
 
 --CREANDO TABLA PERSONA
 
@@ -154,23 +192,6 @@ ELSE
 
 GO
 --
---CREANDO ESQUEMA INCIDENTES
-
-PRINT 'CREANDO ESQUEMA INCIDENTES';
-
-IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = 'Incidentes')
-
-	BEGIN
-		EXEC('CREATE SCHEMA Incidentes')
-
-		PRINT 'ESQUEMA INCIDENTES CREADO';
-	END
-ELSE
-	BEGIN
-		PRINT 'ESQUEMA INCIDENTES YA EXISTE';
-	END
-
-GO
 --CREANDO TABLA TIPO_ACCIDENTE
 
 PRINT 'CREANDO TABLA TIPO_ACCIDENTE';
@@ -242,6 +263,151 @@ ELSE
 	BEGIN
 
 		PRINT 'TABLA  Tipo_Lesion  NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--
+--CREANDO TABLA CARGO
+
+PRINT 'CREANDO TABLA CARGO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Equipamientos].[Cargo]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Equipamientos.Cargo (ID_CARGO INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_CARGO PRIMARY KEY
+		                                  ,NOMBRE VARCHAR(100)  CONSTRAINT NN_CAR_NOM NOT NULL
+										  ,DESCRIPCION VARCHAR(200)  CONSTRAINT NN_CAR_DES NOT NULL
+		                                    );
+		PRINT 'TABLA Cargo CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA  Cargo  NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA ORGANIGRAMA
+
+PRINT 'CREANDO TABLA ORGANIGRAMA';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Proyectos].[Organigrama]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Proyectos.Organigrama (ID_ORGANIGRAMA INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_ORGANIGRAMA PRIMARY KEY
+		                                    ,ID_CARGO INT CONSTRAINT FK_ID_CAR FOREIGN KEY(ID_CARGO) REFERENCES Equipamientos.Cargo(ID_CARGO)
+										    ,ANTECESOR INT  
+											,SUCESOR INT
+		                                    );
+		PRINT 'TABLA Organigrama CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA  Organigrama  NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA EMPLEADO
+
+PRINT 'CREANDO TABLA EMPLEADO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Usuario].[Empleado]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Usuario.Empleado    (ID_EMPLEADO INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_EMPLEADO PRIMARY KEY
+		                                    ,ID_CARGO INT CONSTRAINT FK_ID_CAR FOREIGN KEY(ID_CARGO) REFERENCES Equipamientos.Cargo(ID_CARGO)
+											,ID_PERSONA INT CONSTRAINT FK_ID_PER FOREIGN KEY(ID_PERSONA) REFERENCES Usuario.Persona(ID_PERSONA)
+										    ,FECHA_CONTR DATE CONSTRAINT NN_EMP_FEC_CON NOT NULL
+											,GENERO VARCHAR (50) CONSTRAINT NN_EMP_FEC_GEN NOT NULL
+											,NRO_SEGURO VARCHAR (50) CONSTRAINT NN_EMP_NRO_SEG NOT NULL
+											,ESTADO_SEGURO BIT CONSTRAINT NN_EMP_NRO_SEG NOT NULL
+		                                    );
+		PRINT 'TABLA Empleado CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA Empleado NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+
+--CREANDO TABLA PROYECTO_EMPLEADO
+
+PRINT 'CREANDO TABLA PROYECTO_EMPLEADO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Proyectos].[Proyecto_Empleado]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Proyectos.Proyecto_Empleado (ID_PRO_EMP INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_PRO_EMP PRIMARY KEY
+		                                          ,ID_PROYECTO INT CONSTRAINT FK_ID_PRO FOREIGN KEY(ID_PROYECTO) REFERENCES Proyectos.Proyecto(ID_PROYECTO)
+											      ,ID_EMPLEADO INT CONSTRAINT FK_ID_EMP FOREIGN KEY(ID_EMPLEADO) REFERENCES Usuario.Empleado(ID_EMPLEADO)
+										         
+		                                         );
+		PRINT 'TABLA Proyecto_Empleado CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA Proyecto_Empleado NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA INCIDENTE_EMPLEADO
+
+PRINT 'CREANDO TABLA INCIDENTE_EMPLEADO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Incidentes].[Incidente_Empleado]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Incidentes.Incidente_Empleado (ID_INC_EMP INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_INC_EMP PRIMARY KEY
+		                                          ,ID_INCIDENTE INT CONSTRAINT FK_INC_EMP_ID_INC FOREIGN KEY(ID_INCIDENTE) REFERENCES Incidentes.Incidente(ID_INCIDENTE)
+											      ,ID_EMPLEADO INT CONSTRAINT FK_INC_EMP_ID_EMP FOREIGN KEY(ID_EMPLEADO) REFERENCES Usuario.Empleado(ID_EMPLEADO)
+										           );
+		PRINT 'TABLA Incidente_Empleado CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA Incidente_Empleado NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA AUSENTISMO
+
+PRINT 'CREANDO TABLA AUSENTISMO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Incidentes].[Ausentismo]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Incidentes.Ausentismo (ID_AUSENTISMO INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_ID_AUS PRIMARY KEY
+		                                    ,ID_EMPLEADO INT CONSTRAINT FK_AUS_ID_EMP FOREIGN KEY(ID_EMPLEADO) REFERENCES Usuario.Empleado(ID_EMPLEADO)
+										    ,CAUSA VARCHAR (100) CONSTRAINT NN_AUS_CAU NOT NULL
+											,FECHA_INIC DATE CONSTRAINT NN_AUS_FINC NOT NULL
+											,FECHA_FIN DATE CONSTRAINT NN_AUS_FFIN NOT NULL
+											,DIAS_AUS INT 
+											,HORAS_AUS DATETIME 
+											,OBSERVACION VARCHAR (1000) 
+										   );
+		PRINT 'TABLA Ausentismo CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA Ausentismo NO CREADA, YA EXISTE EN LA BASE DE DATOS';
 
 	END
 
