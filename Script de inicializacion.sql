@@ -8,7 +8,7 @@
 *	Julio Daviu			03-02-2019			Creacion Esquema (Proyectos, Usuario) Tablas (Proyecto, Persona, Login )
 *   Miguel Claros       03-02-2019          Creacion Esquema (Incidentes), Tablas (Password, Incidente, Tipo_Accidente, Tipo_Lesion)
 *   Miguel Claros       05-02-2019          Creacion Esquema (Equipamientos), Tablas (Cargo, Organigrama, Empleado, Proyecto_Emplado,Incidente_Empleado,Ausentismo)
-*
+*	Jorge Flores		06-02-2019			Creacion tablas (Equipamientos.Categoria, Equipamientos.Equipamiento, Equipamientos.Asignacion_Equipamiento)
 *
 *************************************************************/
 --CREATE DATABASE SGSO_RESCUE;
@@ -408,6 +408,78 @@ ELSE
 	BEGIN
 
 		PRINT 'TABLA Ausentismo NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA CATEGORIA
+
+PRINT 'CREANDO TABLA CATEGORIA';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Equipamientos].[Categoria]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Equipamientos.Categoria (ID_CATEGORIA INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_CATEGORIA PRIMARY KEY
+		                                  ,NOMBRE VARCHAR(100)  CONSTRAINT NN_CATE_NOM NOT NULL
+										  ,AREA VARCHAR(100)  CONSTRAINT NN_CATE_AREA NOT NULL
+										  ,DESCRIPCION VARCHAR(200)  CONSTRAINT NN_CATE_DES NOT NULL
+		                                    );
+		PRINT 'TABLA Categoria CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA  Categoria  NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA EQUIPAMIENTO
+
+PRINT 'CREANDO TABLA EQUIPAMIENTO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Equipamientos].[Equipamiento]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Equipamientos.Equipamiento (ID_EQUIPAMIENTO INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_EQUIPAMIENTO PRIMARY KEY
+		                                  ,ID_CATEGORIA INT CONSTRAINT FK_CATE_EQUIP FOREIGN KEY(ID_CATEGORIA) REFERENCES Equipamientos.Categoria(ID_CATEGORIA)
+										  ,NOMBRE VARCHAR(100)  CONSTRAINT NN_EQUI_NOM NOT NULL
+										  ,ESTADO BIT 
+										  ,STOCK INT  CONSTRAINT NN_EQUI_STOCK NOT NULL
+		                                    );
+		PRINT 'TABLA EQUIPAMIENTO CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA  Equipamiento  NO CREADA, YA EXISTE EN LA BASE DE DATOS';
+
+	END
+
+GO
+--CREANDO TABLA ASIGNACION_EQUIPAMIENTO
+
+PRINT 'CREANDO TABLA ASIGNACION_EQUIPAMIENTO';
+
+IF NOT EXISTS (SELECT 1 FROM  sys.objects WHERE object_id=object_id(N'[Equipamientos].[Asignacion_Equipamiento]')
+			AND type in (N'U'))
+			
+BEGIN
+		CREATE TABLE Equipamientos.Asignacion_Equipamiento (ID_ASIGNACION INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_ASIGNACION_EQ PRIMARY KEY
+		                                  ,ID_EQUIPAMIENTO INT CONSTRAINT FK_ASIG_EQUIP FOREIGN KEY(ID_EQUIPAMIENTO) REFERENCES Equipamientos.Equipamiento(ID_EQUIPAMIENTO)
+										  ,ID_CARGO INT CONSTRAINT FK_ASIG_CARGO FOREIGN KEY(ID_CARGO) REFERENCES Equipamientos.Cargo(ID_CARGO)
+										  ,CANTIDAD INT  CONSTRAINT NN_CANT_ASIG NOT NULL
+										  ,FECHA_ASIG DATE CONSTRAINT NN_ASIG_FASI NOT NULL
+										  ,FECHA_DEVOL DATE CONSTRAINT NN_ASIG_FDEV NOT NULL									
+		                                    );
+		PRINT 'TABLA ASIGNACION_EQUIPAMIENTO CREADA';
+END
+ELSE
+	BEGIN
+
+		PRINT 'TABLA  Asignacion_Equipamiento  NO CREADA, YA EXISTE EN LA BASE DE DATOS';
 
 	END
 
