@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 USE [SGSO_RESCUE]
 GO
 
@@ -29,3 +30,34 @@ GO
 
 
 
+=======
+USE [SGSO_RESCUE]
+GO
+
+DECLARE @RC int
+DECLARE @NOMBRE varchar(50)
+DECLARE @APELLIDO varchar(50)
+DECLARE @EMAIL varchar(80)
+DECLARE @DIRECCION varchar(100)
+DECLARE @TELEFONO varchar(50)
+DECLARE @MENSAJE varchar(150)
+DECLARE @ERROR varchar(150)
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [Usuario].[INSERTA_PERSONA] 
+   NULL
+  ,'DAVIU'
+  ,'JULIOLOTR@GMAIL.COM'
+  ,'RUIZ DE ORELLANA'
+  ,'70710023'
+  ,@MENSAJE OUTPUT
+  ,@ERROR OUTPUT
+
+
+GO
+
+
+
+
+>>>>>>> 49ed82336713eef3b89cc602d8dca4b1b7cdcf40
