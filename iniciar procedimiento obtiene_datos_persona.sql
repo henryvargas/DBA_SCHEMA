@@ -1,0 +1,35 @@
+USE [SGSO_RESCUE]
+GO
+
+DECLARE @RC int
+DECLARE @DOC_DOCUMENTO_IDENTIDAD varchar(50)
+DECLARE @NOMBRE varchar(50)
+DECLARE @APELLIDO varchar(50)
+DECLARE @EMAIL varchar(50)
+DECLARE @TELEFONO varchar(50)
+DECLARE @MENSAJE varchar(150)
+DECLARE @ERROR varchar(150)
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [Usuario].[OBTIENE_PERSONA] 
+   5306849
+  ,@NOMBRE OUTPUT
+  ,@APELLIDO OUTPUT
+  ,@EMAIL OUTPUT
+  ,@TELEFONO OUTPUT
+  ,@MENSAJE OUTPUT
+  ,@ERROR OUTPUT
+
+
+  PRINT '================================'
+  PRINT '		DATOS GENERADOS		     '
+  PRINT 'Nombre: '+@NOMBRE;
+  PRINT 'Apellido: '+@APELLIDO;
+  PRINT 'Email: '+@EMAIL;
+  PRINT 'Telfono: '+@TELEFONO;
+  PRINT @MENSAJE;
+  PRINT @ERROR;
+GO
+
+
