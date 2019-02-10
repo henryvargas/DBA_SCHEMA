@@ -1,0 +1,25 @@
+USE [SGSO_RESCUE]
+GO
+
+DECLARE @RC int
+DECLARE @DOCUMENTO_ENTIDAD_USER varchar(50)
+DECLARE @USUARIO varchar(50)
+DECLARE @ID_LOGIN int
+DECLARE @MENSAJE varchar(50)
+DECLARE @ERROR varchar(50)
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [Usuario].[OBTIENE_LOGIN] 
+   '823664'
+  ,'jflores'
+  ,@ID_LOGIN OUTPUT
+  ,@MENSAJE OUTPUT
+  ,@ERROR OUTPUT
+
+  PRINT	 @ID_LOGIN
+  PRINT @MENSAJE
+  PRINT @ERROR
+GO
+
+
