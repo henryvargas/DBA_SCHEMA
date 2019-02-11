@@ -1,0 +1,21 @@
+USE [SGSO_RESCUE]
+GO
+
+DECLARE @RC int
+DECLARE @USUARIO varchar(50)
+DECLARE @PASSWORD nvarchar(300)
+DECLARE @RESULT BIT
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [Usuario].[LOGIN_FUNCIONAL] 
+   'jdaviu'
+  ,'PASSWORD01'
+  ,@RESULT OUTPUT
+
+  PRINT CONVERT(VARCHAR,@RESULT);
+GO
+
+
+
+
