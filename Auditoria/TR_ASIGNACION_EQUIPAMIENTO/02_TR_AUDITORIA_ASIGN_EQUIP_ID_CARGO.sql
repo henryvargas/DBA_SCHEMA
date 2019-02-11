@@ -1,6 +1,6 @@
 /******************************************************************************
-**  Name: TG_PersonA(Audit)_ID_EMPLEADO_InsertUpdate
-**  Desc: Audit History for Asignacion_Equipamiento table - ID_EMPLEADO
+**  Name: TG_PersonA(Audit)_ID_CARGO_InsertUpdate
+**  Desc: Audit History for Asignacion_Equipamiento table - ID_CARGO
 ** 
 **  Called by: Portal
 **
@@ -12,13 +12,13 @@
 *******************************************************************************
 **   Date:     Author:                            Description:
 ** --------   --------        ---------------------------------------------------
-** 02/09/2019 Carlos Camacho   Initial version - Trigger for Audit ASIGN_EQUIP - ID_EMPLEADO
+** 02/09/2019 Carlos Camacho   Initial version - Trigger for Audit ASIGN_EQUIP - ID_CARGO
 *******************************************************************************/
 
 /*****************************************************************************
-PERSONA - ID_EMPLEADO
+PERSONA - ID_CARGO
 *****************************************************************************/
-CREATE TRIGGER [Equipamientos].[TG_Asignacion_Equipamiento(Audit)_ID_EMPLEADO_InsertUpdate]
+CREATE TRIGGER [Equipamientos].[TG_Asignacion_Equipamiento(Audit)_ID_CARGO_InsertUpdate]
 ON [Equipamientos].[Asignacion_Equipamiento]
 FOR INSERT, UPDATE
 AS
@@ -31,7 +31,7 @@ BEGIN
  
   DECLARE @CurrDate DATETIME = GETUTCDATE();
  
-  IF UPDATE(ID_EMPLEADO)
+  IF UPDATE(ID_CARGO)
   BEGIN
     INSERT INTO dbo.AuditHistory(TableName, 
                                  ColumnName, 
@@ -40,13 +40,13 @@ BEGIN
                                  OldValue, 
                                  NewValue) 
     SELECT TableName    = 'Asignacion_Equipamiento', 
-           ColumnName   = 'ID_EMPLEADO',
+           ColumnName   = 'ID_CARGO',
            ID1          = i.ID_ASIGNACION, 
            Date         = @CurrDate, 
-           OldValue     = d.[ID_EMPLEADO], 
-           NewValue     = i.[ID_EMPLEADO]     
+           OldValue     = d.[ID_CARGO], 
+           NewValue     = i.[ID_CARGO]     
     FROM deleted d 
     FULL OUTER JOIN inserted i ON (d.ID_ASIGNACION = i.ID_ASIGNACION)
-    WHERE ISNULL(d.ID_EMPLEADO, '') != ISNULL(i.ID_EMPLEADO, '');
+    WHERE ISNULL(d.ID_CARGO, '') != ISNULL(i.ID_CARGO, '');
   END
 END;
