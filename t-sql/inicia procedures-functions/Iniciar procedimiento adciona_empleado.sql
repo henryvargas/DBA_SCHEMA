@@ -1,0 +1,29 @@
+USE [SGSO_RESCUE]
+GO
+
+DECLARE @RC int
+DECLARE @NOMBRE_CARGO varchar(50)
+DECLARE @CI varchar(50)
+DECLARE @FECHA_CONTRATO date
+DECLARE @GENERO varchar(50)
+DECLARE @NRO_SEGURO varchar(50)
+DECLARE @ESTADO_SEGURO bit
+DECLARE @MENSAJE varchar(50)
+DECLARE @ERROR varchar(50)
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [Usuario].[ADICIONA_EMPLEADO] 
+   'Gerente General'
+  ,'5306849'
+  ,'2019-02-16'
+  ,'Masculino'
+  ,'10023'
+  ,1
+  ,@MENSAJE OUTPUT
+  ,@ERROR OUTPUT
+
+  PRINT @MENSAJE;
+  PRINT @ERROR;
+GO
+
