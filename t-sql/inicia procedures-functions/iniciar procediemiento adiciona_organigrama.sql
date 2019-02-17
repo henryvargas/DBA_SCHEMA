@@ -1,0 +1,19 @@
+USE [SGSO_RESCUE]
+GO
+
+DECLARE @RC int
+DECLARE @ANTECESOR int
+DECLARE @SUCESOR int
+DECLARE @MENSAJE varchar(150)
+DECLARE @ERROR varchar(150)
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [Proyectos].[ADD_ORGANIGRAMA] 
+   @ANTECESOR
+  ,@SUCESOR
+  ,@MENSAJE OUTPUT
+  ,@ERROR OUTPUT
+GO
+
+
