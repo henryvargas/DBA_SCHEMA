@@ -1,3 +1,13 @@
+/*
+*  Inicializacion de datos para SGSO_RESCUE
+*
+*  Nombre          Fecha         Description
+*  ---------------------------------------------------
+* Jorge F. Flores 16/02/2019     Version inicial
+* 
+*/
+
+
 USE [SGSO_RESCUE_DATA];
 
 SET XACT_ABORT ON;

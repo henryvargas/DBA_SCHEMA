@@ -1,3 +1,12 @@
+/*
+*  Creacion de esquema code para SGSO_RESCUE
+*
+*  Nombre          Fecha         Description
+*  ---------------------------------------------------
+* Jorge F. Flores 17/02/2019     Version inicial
+* 
+*/
+
 USE [SGSO_RESCUE_CODE];
 GO
 

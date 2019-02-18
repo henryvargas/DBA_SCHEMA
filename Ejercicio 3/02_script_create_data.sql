@@ -1,3 +1,12 @@
+/*
+*  Creacion de esquema data para SGSO_RESCUE
+*
+*  Nombre          Fecha         Description
+*  ---------------------------------------------------
+* Jorge F. Flores 15/02/2019     Version inicial
+* 
+*/
+
 USE [SGSO_RESCUE_DATA];
 GO
 
