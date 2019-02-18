@@ -1,3 +1,13 @@
+/*
+*  Creacion login
+*
+*  Nombre          Fecha         Description
+*  ---------------------------------------------------
+* Jorge F. Flores 10/02/2019     Version inicial
+* 
+*/
+
+
 USE [master];
 GO
 --TODO: Set SQLCMD variables
